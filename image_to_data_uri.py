@@ -1,4 +1,11 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#   "pillow>=10",
+#   "pillow-heif>=0.18"
+# ]
+# ///
 """
 Convert a PNG image to a base64-encoded data URI after center-cropping to a square
 and resizing to a specified dimension.
