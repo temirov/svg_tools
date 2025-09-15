@@ -214,3 +214,7 @@ uv run --with fonttools --with svgpathtools --with svgwrite python text_to_svg.p
 * `--size`            : Font size in UPM units. Default: `1024`.
 
 ---
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
