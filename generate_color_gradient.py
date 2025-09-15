@@ -1,5 +1,11 @@
-#!/usr/bin/env python3
-
+#!/usr/bin/env -S uv run
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#   "pillow>=10",
+#   "numpy>=1.26"
+# ]
+# ///
 import argparse
 from PIL import Image, ImageDraw, ImageColor
 import numpy as np

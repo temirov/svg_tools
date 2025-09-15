@@ -1,5 +1,13 @@
-#!/usr/bin/env python3
-
+#!/usr/bin/env -S uv run
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#   "opencv-python-headless>=4.9",
+#   "numpy>=1.26",
+#   "pillow>=10",
+#   "pillow-heif>=0.18"
+# ]
+# ///
 import argparse
 import os
 
