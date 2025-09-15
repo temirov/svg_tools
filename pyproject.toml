@@ -1,0 +1,13 @@
+[project]
+name = "svg_tools"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "opencv-python",
+    "Pillow",
+    "numpy>=1.26.0",
+    "fonttools",
+    "scipy>=1.14.1",
+    "svgpathtools",
+    "svgwrite"
+]
