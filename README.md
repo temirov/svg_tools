@@ -20,7 +20,7 @@ Each script declares its dependencies in a `# /// script` block. When you run th
 1. Make the script executable:
    ```bash
    chmod +x script.py
-````
+```
 
 2. Run it directly:
 
