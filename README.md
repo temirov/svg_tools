@@ -18,15 +18,16 @@ Each script declares its dependencies in a `# /// script` block. When you run th
 ## Usage Pattern
 
 1. Make the script executable:
-   ```bash
+
+```shell
    chmod +x script.py
 ```
 
 2. Run it directly:
 
-   ```bash
-   ./script.py [arguments...]
-   ```
+```shell
+./script.py [arguments...]
+```
 
 There is no need to call `uv run` explicitly — the shebang handles it.
 
@@ -41,7 +42,7 @@ and draw a centered rectangle of a specified color and ratio.
 
 **Usage:**
 
-```bash
+```shell
 ./generate_color_gradient.py \
     --gradient-color <COLOR_NAME_OR_HEX> \
     --center-color <COLOR_NAME_OR_HEX> \
@@ -53,7 +54,7 @@ and draw a centered rectangle of a specified color and ratio.
 
 Example:
 
-```bash
+```shell
 ./generate_color_gradient.py \
     --gradient-color turquoise \
     --center-color gold \
@@ -71,7 +72,7 @@ Center-crop an image to a square, resize it to 32×32 or 64×64, and output a Ba
 
 **Usage:**
 
-```bash
+```shell
 ./image_to_data_uri.py <input_image> --size <32|64>
 ```
 
@@ -85,7 +86,7 @@ Extract a filled silhouette (binary mask) from an input image (assumes a single 
 
 **Usage:**
 
-```bash
+```shell
 ./image_to_silhouette.py \
     --input-file <input_image> \
     --output-file <output_mask.png> \
@@ -97,35 +98,91 @@ Extract a filled silhouette (binary mask) from an input image (assumes a single 
 
 ### `image_to_svg.py`
 
-Convert a raster image (JPG, PNG, HEIC, etc.) into an SVG vector file by detecting contours.
+Convert a raster image (JPG/PNG/HEIF, etc.) to SVG using one of two algorithms:
+
+* `contours` — edge detection + contour tracing → **stroked** paths (good for sketches/outlines).
+* `flat` — CIELAB k-means color quantization → **filled** color regions with optional outline (good for logos/flat art).
+
+HEIF/HEIC is supported via `pillow-heif`.
 
 **Usage:**
 
-```bash
+```shell
 ./image_to_svg.py <input_image> \
-    [--output_suffix <SUFFIX>] \
-    [--blur <ODD_INTEGER>] \
-    [--canny1 <INT>] \
-    [--canny2 <INT>] \
-    [--min_area <FLOAT>] \
-    [--epsilon <FLOAT>] \
-    [--stroke_color <COLOR>] \
-    [--stroke_width <FLOAT>]
+  [--algorithm {contours,flat}] \
+  [--output_suffix <SUFFIX>] \
+  [--blur_kernel <ODD_INT>] \
+  [--alpha_threshold <0-255>] \
+  \
+  # Contours mode
+  [--edge_low <INT>] [--edge_high <INT>] \
+  [--contour_min_area <FLOAT>] \
+  [--contour_epsilon_factor <FLOAT>] \
+  [--stroke_color <COLOR>] [--stroke_width <FLOAT>] \
+  \
+  # Flat mode
+  [--color_count <INT>] [--region_min_area <FLOAT>] \
+  [--region_epsilon_pixels <FLOAT>] [--palette_seed <INT>] \
+  [--include_outline] \
+  [--outline_low <INT>] [--outline_high <INT>] \
+  [--outline_min_area <FLOAT>] \
+  [--outline_width <FLOAT>] [--outline_color <COLOR>]
 ```
 
-Example:
+**Quick start:**
 
-```bash
-./image_to_svg.py assets/sample_photo.jpg \
-    --output_suffix _outline.svg \
-    --blur 5 \
-    --canny1 50 \
-    --canny2 150 \
-    --min_area 100 \
-    --epsilon 0.01 \
-    --stroke_color black \
-    --stroke_width 2
+```shell
+# 1) Outline-only (contours, default algorithm)
+./image_to_svg.py assets/photo.jpg \
+  --blur_kernel 7 --edge_low 100 --edge_high 250 \
+  --contour_min_area 50 --contour_epsilon_factor 0.005 \
+  --stroke_color black --stroke_width 1.0
+
+# 2) Flat color regions with an outline
+./image_to_svg.py assets/logo.png --algorithm flat \
+  --color_count 6 --region_min_area 64 --region_epsilon_pixels 0.75 \
+  --include_outline --outline_low 80 --outline_high 200 \
+  --outline_min_area 48 --outline_width 1.5 --outline_color black
 ```
+
+**Notes**
+
+* `--blur_kernel` is made odd automatically; `0/1` disables blur.
+* `--alpha_threshold` masks out near-transparent pixels for both algorithms.
+* In `flat` mode, background is auto-detected from the image border and dropped from the palette.
+
+**Parameter reference**
+
+*Common*
+
+| Flag                | Meaning                                     |
+|---------------------|---------------------------------------------|
+| `--algorithm`       | `contours` (default) or `flat`.             |
+| `--output_suffix`   | Suffix for output SVG filename.             |
+| `--blur_kernel`     | Gaussian blur kernel (odd; `0/1` disables). |
+| `--alpha_threshold` | Visible-pixel alpha cutoff (0–255).         |
+
+*Contours mode*
+
+| Flag                               | Meaning                                         |
+|------------------------------------|-------------------------------------------------|
+| `--edge_low`, `--edge_high`        | Canny thresholds.                               |
+| `--contour_min_area`               | Minimum area to keep a contour.                 |
+| `--contour_epsilon_factor`         | `ε = factor × perimeter` (poly simplification). |
+| `--stroke_color`, `--stroke_width` | Stroke styling for contour paths.               |
+
+*Flat mode*
+
+| Flag                                 | Meaning                                        |
+|--------------------------------------|------------------------------------------------|
+| `--color_count`                      | K for LAB k-means (background auto-dropped).   |
+| `--region_min_area`                  | Minimum area for filled regions.               |
+| `--region_epsilon_pixels`            | Absolute ε (pixels) for region simplification. |
+| `--palette_seed`                     | Random seed for k-means init.                  |
+| `--include_outline`                  | Add outline layer over filled regions.         |
+| `--outline_low`, `--outline_high`    | Canny thresholds for the outline.              |
+| `--outline_min_area`                 | Minimum area for outline contours.             |
+| `--outline_width`, `--outline_color` | Outline stroke styling.                        |
 
 ---
 
@@ -135,7 +192,7 @@ Render any text into a valid single-path SVG file.
 
 **Usage:**
 
-```bash
+```shell
 ./text_to_svg.py "<Your Text Here>" \
     --font <path_to_font.ttf> \
     --out <output_filename.svg> \
@@ -144,7 +201,7 @@ Render any text into a valid single-path SVG file.
 
 Example:
 
-```bash
+```shell
 ./text_to_svg.py "Marco Polo Research Lab" \
     --font assets/GreatVibes-Regular.ttf \
     --out title.svg
