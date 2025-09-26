@@ -1,6 +1,12 @@
-#!/usr/bin/env python3
-# text_to_svg.py
-#
+#!/usr/bin/env -S uv run
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#   "svgwrite>=1.4.3",
+#   "fonttools>=4.44.0",
+#   "svgpathtools>=1.6.1"
+# ]
+# ///
 # Render any text into a **valid** single-path SVG.
 # Fixes the previous “invalid value for attribute ‘d’” error by
 # normalising the path-string format before saving.
