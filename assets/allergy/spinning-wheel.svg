@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="startWheelBase" cx="50%" cy="38%" r="70%">
+      <stop offset="0%" stop-color="#fff6df"/>
+      <stop offset="100%" stop-color="#ffe5f0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="32" cy="32" r="28" fill="url(#startWheelBase)" stroke="#111" stroke-width="4"/>
+  <path d="M32 32 L32 10 A22 22 0 0 1 54 32 Z" fill="#ffcc4d" stroke="#111" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M32 32 L54 32 A22 22 0 0 1 32 54 Z" fill="#ff6f87" stroke="#111" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M32 32 L32 54 A22 22 0 0 1 10 32 Z" fill="#7bdff2" stroke="#111" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M32 32 L10 32 A22 22 0 0 1 32 10 Z" fill="#ff9f80" stroke="#111" stroke-width="2" stroke-linejoin="round"/>
+  <circle cx="32" cy="32" r="11" fill="#fff7c8" stroke="#111" stroke-width="2"/>
+  <circle cx="32" cy="32" r="5" fill="#ff4d6d" stroke="#111" stroke-width="1.5"/>
+  <path d="M32 16 L26 2 L38 2 Z" fill="#ff4d6d" stroke="#111" stroke-width="3" stroke-linejoin="round"/>
+</svg>
