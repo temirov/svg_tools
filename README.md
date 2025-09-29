@@ -209,6 +209,55 @@ Example:
 
 ---
 
+### `to_favicons.py`
+
+Generate a complete favicon package from a single SVG source.
+
+**Presets**
+
+* **minimal (default)** — modern best-practice set:
+
+    * `favicon.ico` (16, 32, 48, 64)
+    * `favicon-32x32.png`
+    * `apple-touch-icon.png` (180×180)
+    * `android-chrome-192x192.png`
+    * `android-chrome-512x512.png`
+    * `safari-pinned-tab.svg`
+    * `site.webmanifest`
+    * optional `mstile-150x150.png` + `browserconfig.xml` when `--windows-tiles` is used
+
+* **full** — everything in *minimal* plus historic sizes (16, 24, 48, 72, 96, 128, 144, 152, 167, 256, 384).
+
+**Output layout**
+
+```
+<site-slug>/<assets_path>/...
+```
+
+* If `--site-name` is provided → folder is `<site-slug>/assets/favicons/…`.
+* If omitted → folder is `site/assets/favicons/…`.
+* Default `assets_path = "assets/favicons"` (configurable via `--assets-path`).
+
+**Usage:**
+
+```shell
+# Minimal preset (default), no site name
+./to_favicons.py --svg ./logo.svg
+
+# Minimal preset with site name
+./to_favicons.py --svg ./logo.svg --site-name "Marco Polo Research Lab"
+
+# Full preset with Windows tiles
+./to_favicons.py --svg ./logo.svg --preset full --windows-tiles
+
+# Custom assets path
+./to_favicons.py --svg assets/social_threader/favicon.svg --site-name "Social Threader" --background-color "0A1B3D" --theme-color "D4AF37"
+```
+
+The script also generates a `HEAD-snippet.html` file with `<link>` and `<meta>` tags ready to paste into your site’s `<head>`.
+
+---
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
